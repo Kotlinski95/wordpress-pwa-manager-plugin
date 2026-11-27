@@ -23,6 +23,7 @@ abstract class TestCase extends PhpUnitTestCase
         Functions\when('home_url')->alias(static fn(string $path = ''): string => 'https://example.test' . $path);
         Functions\when('wp_json_encode')->alias(static fn($data, int $flags = 0): string|false => json_encode($data, $flags));
         Functions\when('esc_attr')->alias(static fn($value): string => htmlspecialchars((string) $value, ENT_QUOTES));
+        Functions\when('wp_parse_url')->alias(static fn(string $url, int $component = -1) => parse_url($url, $component));
         Functions\when('esc_url')->alias(static fn($value): string => (string) $value);
     }
 

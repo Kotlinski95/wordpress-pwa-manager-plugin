@@ -53,7 +53,7 @@ function wp_pwa_manager_validate_package_url($package) {
         return false;
     }
 
-    $parts = parse_url($package);
+    $parts = wp_parse_url($package);
     if (!is_array($parts) || array() !== array_diff(array_keys($parts), array('scheme', 'host', 'path'))) {
         return false;
     }
