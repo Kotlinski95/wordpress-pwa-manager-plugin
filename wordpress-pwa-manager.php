@@ -82,26 +82,7 @@ function wp_pwa_manager_enqueue_frontend_assets() {
             WP_PWA_MANAGER_VERSION
         );
 
-        $settings = wp_pwa_manager_get_all_settings();
-        wp_localize_script('wp-pwa-manager-frontend', 'wpPwaManager', array(
-            'settings' => $settings,
-            'swUrl' => home_url('/sw.js'),
-            'ajaxUrl' => admin_url('admin-ajax.php'),
-            'nonce' => wp_create_nonce('wp_pwa_manager_nonce'),
-            'i18n' => array(
-                'installPromptTitle' => __('Install App', 'wordpress-pwa-manager'),
-                'installPromptText' => __('Install this app on your device for a better experience and quick access.', 'wordpress-pwa-manager'),
-                'installPromptInstall' => __('Install', 'wordpress-pwa-manager'),
-                'installPromptLater' => __('Ask me later', 'wordpress-pwa-manager'),
-                'installPromptDismiss' => __('No thanks', 'wordpress-pwa-manager'),
-                'updatePromptTitle' => __('Update Available', 'wordpress-pwa-manager'),
-                'updatePromptText' => __('A new version of this app is available. Update now for the latest features and improvements.', 'wordpress-pwa-manager'),
-                'updatePromptUpdate' => __('Update Now', 'wordpress-pwa-manager'),
-                'updatePromptLater' => __('Later', 'wordpress-pwa-manager'),
-                'connectionOnline' => __('Back online', 'wordpress-pwa-manager'),
-                'connectionOffline' => __('You are offline', 'wordpress-pwa-manager'),
-            )
-        ));
+        wp_localize_script('wp-pwa-manager-frontend', 'wpPwaManager', wp_pwa_manager_get_frontend_data());
     }
 }
 add_action('wp_enqueue_scripts', 'wp_pwa_manager_enqueue_frontend_assets');

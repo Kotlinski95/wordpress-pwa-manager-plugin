@@ -6,7 +6,63 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 function wp_pwa_manager_frontend_init() {
     add_action('wp_footer', 'wp_pwa_manager_add_pwa_scripts');
+    add_action('wp_head', 'wp_pwa_manager_print_install_gate_capture', 1);
     wp_pwa_manager_handle_offline_page();
+}
+
+function wp_pwa_manager_get_install_gate_config() {
+    $config = apply_filters('wp_pwa_manager_install_gate', array(
+        'min_views' => 0,
+        'min_visible_ms' => 0,
+        'consent_cookie' => '',
+    ));
+    $config = is_array($config) ? $config : array();
+
+    return array(
+        'min_views' => max(0, (int) ($config['min_views'] ?? 0)),
+        'min_visible_ms' => max(0, (int) ($config['min_visible_ms'] ?? 0)),
+        'consent_cookie' => preg_replace('/[^A-Za-z0-9_\-]/', '', (string) ($config['consent_cookie'] ?? '')),
+    );
+}
+
+function wp_pwa_manager_install_gate_enabled() {
+    $config = wp_pwa_manager_get_install_gate_config();
+
+    return $config['min_views'] > 0 || $config['min_visible_ms'] > 0 || '' !== $config['consent_cookie'];
+}
+
+function wp_pwa_manager_get_install_gate_capture_script() {
+    return '(function(w){var s=w.wpPwaEarlyPrompt={event:null,listener:function(e){e.preventDefault();e.stopImmediatePropagation();s.event=e;}};w.addEventListener("beforeinstallprompt",s.listener,true);})(window);';
+}
+
+function wp_pwa_manager_print_install_gate_capture() {
+    if (!wp_pwa_manager_get_setting('install_prompt_enabled', true) || !wp_pwa_manager_install_gate_enabled()) {
+        return;
+    }
+
+    wp_print_inline_script_tag(wp_pwa_manager_get_install_gate_capture_script());
+}
+
+function wp_pwa_manager_get_frontend_data() {
+    return array(
+        'settings' => wp_pwa_manager_get_public_settings(),
+        'installGate' => wp_pwa_manager_get_install_gate_config(),
+        'swUrl' => home_url('/sw.js'),
+        'ajaxUrl' => admin_url('admin-ajax.php'),
+        'i18n' => array(
+            'installPromptTitle' => __('Install App', 'wordpress-pwa-manager'),
+            'installPromptText' => __('Install this app on your device for a better experience and quick access.', 'wordpress-pwa-manager'),
+            'installPromptInstall' => __('Install', 'wordpress-pwa-manager'),
+            'installPromptLater' => __('Ask me later', 'wordpress-pwa-manager'),
+            'installPromptDismiss' => __('No thanks', 'wordpress-pwa-manager'),
+            'updatePromptTitle' => __('Update Available', 'wordpress-pwa-manager'),
+            'updatePromptText' => __('A new version of this app is available. Update now for the latest features and improvements.', 'wordpress-pwa-manager'),
+            'updatePromptUpdate' => __('Update Now', 'wordpress-pwa-manager'),
+            'updatePromptLater' => __('Later', 'wordpress-pwa-manager'),
+            'connectionOnline' => __('Back online', 'wordpress-pwa-manager'),
+            'connectionOffline' => __('You are offline', 'wordpress-pwa-manager'),
+        ),
+    );
 }
 
 function wp_pwa_manager_handle_offline_page() {

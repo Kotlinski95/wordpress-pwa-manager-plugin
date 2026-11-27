@@ -18,7 +18,7 @@ declare global {
         wpPwaManager: {
             settings: PWASettings;
             ajaxUrl: string;
-            nonce: string;
+            installGate?: import('./install-gate').InstallGateConfig;
             swUrl: string;
             i18n: {
                 installPromptTitle: string;
@@ -451,8 +451,7 @@ export class PWAManager {
                 },
                 body: new URLSearchParams({
                     action: 'wp_pwa_save_subscription',
-                    subscription: JSON.stringify(subscription),
-                    nonce: window.wpPwaManager.nonce
+                    subscription: JSON.stringify(subscription)
                 })
             });
 

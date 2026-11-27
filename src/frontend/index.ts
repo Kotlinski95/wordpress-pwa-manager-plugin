@@ -1,8 +1,13 @@
 import { PWAManager } from './pwa-manager';
+import { initInstallGate, isGateEnabled } from './install-gate';
 import './styles/frontend.scss';
 
-// Initialize PWA Manager when DOM is ready
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
     const pwaManager = new PWAManager();
-    pwaManager.init();
+    await pwaManager.init();
+
+    const gate = window.wpPwaManager?.installGate;
+    if (isGateEnabled(gate)) {
+        initInstallGate(gate);
+    }
 });

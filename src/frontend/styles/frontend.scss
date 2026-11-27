@@ -1,15 +1,42 @@
-// Frontend Styles for PWA Manager
+.pwa-install-prompt,
+.pwa-update-prompt,
+.pwa-connection-status {
+  --pwa-surface: var(--wp-pwa-surface, var(--wp--preset--color--surface, #fff));
+  --pwa-foreground: var(--wp-pwa-foreground, var(--wp--preset--color--foreground, #333));
+  --pwa-divider: var(--wp-pwa-divider, var(--wp--preset--color--divider, #e0e0e0));
+  --pwa-accent: var(--wp-pwa-accent, var(--wp--preset--color--primary, #0073aa));
+  --pwa-accent-contrast: var(--wp-pwa-accent-contrast, var(--wp--preset--color--white, #fff));
+  --pwa-update-accent: var(--wp-pwa-update-accent, var(--wp--preset--color--secondary, #f56500));
+  --pwa-muted: var(--wp-pwa-muted, var(--wp--preset--color--surface-contrast, #f0f0f0));
+  --pwa-muted-foreground: var(--wp-pwa-muted-foreground, var(--wp--preset--color--foreground-contrast, #666));
+  --pwa-online-bg: var(--wp-pwa-online-bg, #e8f5e8);
+  --pwa-online-border: var(--wp-pwa-online-border, #46b450);
+  --pwa-online-color: var(--wp-pwa-online-color, #2e7d32);
+  --pwa-offline-bg: var(--wp-pwa-offline-bg, #ffebee);
+  --pwa-offline-border: var(--wp-pwa-offline-border, #f44336);
+  --pwa-offline-color: var(--wp-pwa-offline-color, #c62828);
+  --pwa-radius: var(--wp-pwa-radius, 0.75rem);
+  --pwa-button-radius: var(--wp-pwa-button-radius, 0.375rem);
+  --pwa-shadow: var(--wp-pwa-shadow, 0 0.5rem 2rem rgba(0, 0, 0, 0.15));
+  --pwa-z-index: var(--wp-pwa-z-index, 10000);
+  --pwa-inset-bottom: var(--wp-pwa-inset-bottom, 1.25rem);
+  --pwa-inset-inline: var(--wp-pwa-inset-inline, 1.25rem);
+  --pwa-status-top: var(--wp-pwa-status-top, 1.25rem);
+  --pwa-status-inset-inline: var(--wp-pwa-status-inset-inline, 50%);
+}
+
 .pwa-install-prompt,
 .pwa-update-prompt {
   position: fixed;
-  bottom: 1.25rem;
-  right: 1.25rem;
+  bottom: var(--pwa-inset-bottom);
+  right: var(--pwa-inset-inline);
   max-width: 30rem;
-  background: white;
-  border-radius: 0.75rem;
-  box-shadow: 0 0.5rem 2rem rgba(0, 0, 0, 0.15);
-  border: 0.0625rem solid #e0e0e0;
-  z-index: 10000;
+  background: var(--pwa-surface);
+  color: var(--pwa-foreground);
+  border-radius: var(--pwa-radius);
+  box-shadow: var(--pwa-shadow);
+  border: 0.0625rem solid var(--pwa-divider);
+  z-index: var(--pwa-z-index);
   opacity: 0;
   transform: translateY(1.25rem);
   transition: all 0.3s ease;
@@ -20,10 +47,9 @@
   }
 
   @media (max-width: 30rem) {
-    left: 1.25rem;
-    right: 1.25rem;
+    left: var(--pwa-inset-inline);
+    right: var(--pwa-inset-inline);
     max-width: none;
-    bottom: 1.25rem;
   }
 }
 
@@ -37,10 +63,10 @@
     justify-content: center;
     width: 2.5rem;
     height: 2.5rem;
-    background: #0073aa;
+    background: var(--pwa-accent);
     border-radius: 50%;
     margin: 0 auto 1rem auto;
-    color: white;
+    color: var(--pwa-accent-contrast);
 
     svg {
       width: 1.25rem;
@@ -52,9 +78,16 @@
     text-align: center;
     margin-bottom: 1.25rem;
 
+    h3 {
+      margin: 0 0 0.5rem;
+      font-size: 1.125rem;
+      line-height: 1.3;
+      color: var(--pwa-foreground);
+    }
+
     p {
       margin: 0;
-      color: #333;
+      color: var(--pwa-foreground);
       font-size: 0.875rem;
       line-height: 1.5;
     }
@@ -68,27 +101,27 @@
 
     button {
       padding: 0.625rem 1.125rem;
-      border: none;
-      border-radius: 0.375rem;
+      border: 0.0625rem solid transparent;
+      border-radius: var(--pwa-button-radius);
       cursor: pointer;
       font-size: 0.875rem;
-      font-weight: 500;
+      font-weight: 600;
       transition: all 0.2s ease;
       min-width: 5rem;
 
-      &:focus {
-        outline: 0.125rem solid #0073aa;
+      &:focus-visible {
+        outline: 0.1875rem solid var(--pwa-accent);
         outline-offset: 0.125rem;
       }
     }
 
     .pwa-install-button,
     .pwa-update-button {
-      background: #0073aa;
-      color: white;
+      background: var(--pwa-accent);
+      color: var(--pwa-accent-contrast);
 
       &:hover {
-        background: #005a87;
+        background: color-mix(in srgb, var(--pwa-accent) 82%, var(--pwa-foreground));
         transform: translateY(-0.0625rem);
       }
 
@@ -98,12 +131,13 @@
     }
 
     .pwa-dismiss-button {
-      background: #f0f0f0;
-      color: #666;
+      background: var(--pwa-muted);
+      color: var(--pwa-muted-foreground);
+      border-color: var(--pwa-divider);
 
       &:hover {
-        background: #e0e0e0;
-        color: #333;
+        background: var(--pwa-surface);
+        color: var(--pwa-foreground);
       }
     }
   }
@@ -118,7 +152,7 @@
     background: none;
     cursor: pointer;
     font-size: 1.125rem;
-    color: #666;
+    color: var(--pwa-foreground);
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -126,29 +160,28 @@
     transition: all 0.2s ease;
 
     &:hover {
-      background: #f0f0f0;
-      color: #333;
+      background: var(--pwa-muted);
+      color: var(--pwa-muted-foreground);
     }
 
-    &:focus {
-      outline: 0.125rem solid #0073aa;
+    &:focus-visible {
+      outline: 0.1875rem solid var(--pwa-accent);
       outline-offset: 0.125rem;
     }
   }
 }
 
-// Update prompt specific styles
 .pwa-update-prompt {
   .pwa-prompt-icon {
-    background: #f56500;
+    background: var(--pwa-update-accent);
 
     svg {
-      animation: spin 2s linear infinite;
+      animation: pwa-spin 2s linear infinite;
     }
   }
 }
 
-@keyframes spin {
+@keyframes pwa-spin {
   from {
     transform: rotate(0deg);
   }
@@ -157,20 +190,20 @@
   }
 }
 
-// Connection Status
 .pwa-connection-status {
   position: fixed;
-  top: 1.25rem;
-  left: 50%;
+  top: var(--pwa-status-top);
+  left: var(--pwa-status-inset-inline);
   transform: translateX(-50%) translateY(-1.25rem);
-  background: white;
+  background: var(--pwa-surface);
+  color: var(--pwa-foreground);
   padding: 0.75rem 1.25rem;
   border-radius: 1.5rem;
   box-shadow: 0 0.25rem 1rem rgba(0, 0, 0, 0.1);
-  z-index: 10001;
+  z-index: calc(var(--pwa-z-index) + 1);
   opacity: 0;
   transition: all 0.3s ease;
-  border: 0.0625rem solid #e0e0e0;
+  border: 0.0625rem solid var(--pwa-divider);
 
   &.show {
     opacity: 1;
@@ -178,19 +211,19 @@
   }
 
   &.pwa-status-online {
-    background: #e8f5e8;
-    border-color: #46b450;
-    color: #2e7d32;
+    background: var(--pwa-online-bg);
+    border-color: var(--pwa-online-border);
+    color: var(--pwa-online-color);
   }
 
   &.pwa-status-offline {
-    background: #ffebee;
-    border-color: #f44336;
-    color: #c62828;
+    background: var(--pwa-offline-bg);
+    border-color: var(--pwa-offline-border);
+    color: var(--pwa-offline-color);
   }
 
   @media (max-width: 30rem) {
-    left: 1.25rem;
+    left: var(--pwa-inset-inline);
     transform: translateY(-1.25rem);
 
     &.show {
@@ -272,7 +305,7 @@
   border: 0.125rem solid #f3f3f3;
   border-top: 0.125rem solid #0073aa;
   border-radius: 50%;
-  animation: spin 1s linear infinite;
+  animation: pwa-spin 1s linear infinite;
 }
 
 // Responsive utilities
@@ -289,7 +322,6 @@
   }
 }
 
-// High contrast mode support
 @media (prefers-contrast: high) {
   .pwa-install-prompt,
   .pwa-update-prompt {
@@ -309,12 +341,16 @@
   }
 }
 
-// Reduced motion support
 @media (prefers-reduced-motion: reduce) {
   .pwa-install-prompt,
   .pwa-update-prompt,
   .pwa-connection-status {
-    transition: opacity 0.1s ease;
+    transition: none;
+  }
+
+  .pwa-prompt-content .pwa-prompt-buttons button,
+  .pwa-prompt-content .pwa-close-button {
+    transition: none;
   }
 
   .pwa-prompt-icon svg {
@@ -327,52 +363,41 @@
   }
 }
 
-// Dark mode support
-@media (prefers-color-scheme: dark) {
+html.ka11y-stop-animations {
   .pwa-install-prompt,
-  .pwa-update-prompt {
-    background: #2d2d2d;
-    border-color: #444;
-    color: #fff;
-
-    .pwa-prompt-text p {
-      color: #e0e0e0;
-    }
-
-    .pwa-dismiss-button {
-      background: #444;
-      color: #e0e0e0;
-
-      &:hover {
-        background: #555;
-      }
-    }
-
-    .pwa-close-button {
-      color: #e0e0e0;
-
-      &:hover {
-        background: #444;
-        color: #fff;
-      }
-    }
+  .pwa-update-prompt,
+  .pwa-connection-status {
+    transition: none;
   }
 
+  .pwa-prompt-content .pwa-prompt-buttons button,
+  .pwa-prompt-content .pwa-close-button {
+    transition: none;
+  }
+
+  .pwa-prompt-icon svg {
+    animation: none;
+  }
+
+  .pwa-loading-spinner {
+    animation: none;
+    border-top-color: #0073aa;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  .pwa-install-prompt,
+  .pwa-update-prompt,
   .pwa-connection-status {
-    background: #2d2d2d;
-    border-color: #444;
-
-    &.pwa-status-online {
-      background: #1b4332;
-      border-color: #46b450;
-      color: #81c784;
-    }
-
-    &.pwa-status-offline {
-      background: #4a1c1c;
-      border-color: #f44336;
-      color: #ef9a9a;
-    }
+    --pwa-surface: var(--wp-pwa-surface, var(--wp--preset--color--surface, #2d2d2d));
+    --pwa-foreground: var(--wp-pwa-foreground, var(--wp--preset--color--foreground, #e0e0e0));
+    --pwa-divider: var(--wp-pwa-divider, var(--wp--preset--color--divider, #444));
+    --pwa-muted: var(--wp-pwa-muted, var(--wp--preset--color--surface-contrast, #444));
+    --pwa-muted-foreground: var(--wp-pwa-muted-foreground, var(--wp--preset--color--foreground-contrast, #e0e0e0));
+    --pwa-online-bg: var(--wp-pwa-online-bg, #1b4332);
+    --pwa-online-color: var(--wp-pwa-online-color, #81c784);
+    --pwa-offline-bg: var(--wp-pwa-offline-bg, #4a1c1c);
+    --pwa-offline-color: var(--wp-pwa-offline-color, #ef9a9a);
   }
 
   .wp-pwa-offline-page {

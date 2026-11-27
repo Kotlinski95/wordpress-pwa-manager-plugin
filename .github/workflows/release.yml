@@ -56,12 +56,22 @@ jobs:
           cd dist
           sha256sum "${PLUGIN_SLUG}.zip" > "${PLUGIN_SLUG}.zip.sha256"
           sha256sum --check "${PLUGIN_SLUG}.zip.sha256"
+      - env:
+          RELEASE_SIGNING_KEY: ${{ secrets.RELEASE_SIGNING_KEY }}
+        run: |
+          if [ -z "${RELEASE_SIGNING_KEY}" ]; then
+            echo "RELEASE_SIGNING_KEY secret is missing" >&2
+            exit 1
+          fi
+          node bin/sign-release.mjs "dist/${PLUGIN_SLUG}.zip"
+          test -s "dist/${PLUGIN_SLUG}.zip.sig"
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
         with:
           name: release-assets
           path: |
             dist/${{ env.PLUGIN_SLUG }}.zip
             dist/${{ env.PLUGIN_SLUG }}.zip.sha256
+            dist/${{ env.PLUGIN_SLUG }}.zip.sig
             dist/release-notes.md
           if-no-files-found: error
 
@@ -85,6 +95,7 @@ jobs:
           files: |
             dist/${{ env.PLUGIN_SLUG }}.zip
             dist/${{ env.PLUGIN_SLUG }}.zip.sha256
+            dist/${{ env.PLUGIN_SLUG }}.zip.sig
           body_path: dist/release-notes.md
           prerelease: ${{ contains(github.ref_name, '-') }}
       - env:
@@ -92,7 +103,7 @@ jobs:
           GH_REPO: ${{ github.repository }}
         run: |
           assets=$(gh release view "${GITHUB_REF_NAME}" --json assets --jq '.assets[].name')
-          for required in "${PLUGIN_SLUG}.zip" "${PLUGIN_SLUG}.zip.sha256"; do
+          for required in "${PLUGIN_SLUG}.zip" "${PLUGIN_SLUG}.zip.sha256" "${PLUGIN_SLUG}.zip.sig"; do
             grep -qx "${required}" <<< "${assets}" || {
               echo "Release asset ${required} missing" >&2
               exit 1

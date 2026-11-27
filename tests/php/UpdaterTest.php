@@ -29,7 +29,7 @@ final class UpdaterTest extends TestCase
         $this->assertStringContainsString("'https://github.com/Kotlinski95/wordpress-pwa-manager-plugin/'", $source);
         $this->assertStringContainsString("'wordpress-pwa-manager'", $source);
         $this->assertStringContainsString("setBranch('main')", $source);
-        $this->assertStringContainsString("enableReleaseAssets('/wordpress-pwa-manager\\.zip/')", $source);
+        $this->assertStringContainsString("enableReleaseAssets('/wordpress-pwa-manager\\.zip$/')", $source);
     }
 
     public function test_disable_constant_is_honoured_in_a_separate_process(): void

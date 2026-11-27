@@ -35,7 +35,6 @@ export const configure = (
 	window.wpPwaManager = {
 		settings: { ...baseSettings, ...overrides },
 		ajaxUrl: '/wp-admin/admin-ajax.php',
-		nonce: 'nonce',
 		swUrl: 'https://example.test/sw.js',
 		i18n,
 	} as typeof window.wpPwaManager;

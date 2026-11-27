@@ -10,6 +10,15 @@ define('WP_PWA_MANAGER_PLUGIN_URL', 'https://example.test/wp-content/plugins/wor
 define('WP_PWA_MANAGER_PLUGIN_PATH', dirname(__DIR__, 2) . '/');
 define('WP_PWA_MANAGER_PLUGIN_FILE', dirname(__DIR__, 2) . '/wordpress-pwa-manager.php');
 
+if (!class_exists('WP_Error')) {
+    class WP_Error
+    {
+        public function __construct(public string $code = '', public string $message = '')
+        {
+        }
+    }
+}
+
 if (!is_dir(ABSPATH)) {
     mkdir(ABSPATH, 0777, true);
 }

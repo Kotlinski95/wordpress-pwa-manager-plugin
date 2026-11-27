@@ -34,4 +34,5 @@ There is no bug bounty.
 - CodeQL scans JavaScript, TypeScript and GitHub Actions workflows on every pull request and weekly.
 - CodeQL does not support PHP. PHP is covered by WordPress Plugin Check and `composer audit`.
 - Dependabot opens weekly updates for npm, Composer and GitHub Actions; CI runs `npm audit --omit=dev --audit-level=high` and `composer audit`.
-- Release assets carry a `.sha256` checksum and a build provenance attestation.
+- Release assets carry a `.sha256` checksum, an Ed25519 signature (`.sig`) and a build provenance attestation.
+- The updater refuses to install a plugin update whose package URL is not the exact GitHub release asset, or whose signature is missing or does not verify against the public key in `WP_PWA_MANAGER_UPDATE_PUBLIC_KEY`. The private key lives only in the `RELEASE_SIGNING_KEY` repository secret; rotating it means shipping a new public key in a release signed with the old one.

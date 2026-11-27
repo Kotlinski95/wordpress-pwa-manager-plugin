@@ -42,6 +42,20 @@ function wp_pwa_manager_get_all_settings() {
     );
 }
 
+function wp_pwa_manager_get_public_settings() {
+    $settings = wp_pwa_manager_get_all_settings();
+    $public_keys = array(
+        'install_prompt_enabled',
+        'update_prompt_enabled',
+        'update_prompt_text',
+        'update_prompt_button_text',
+        'push_notifications_enabled',
+        'vapid_public_key',
+    );
+
+    return array_intersect_key($settings, array_flip($public_keys));
+}
+
 function wp_pwa_manager_get_setting($key, $default = null) {
     $all_settings = wp_pwa_manager_get_all_settings();
     return isset($all_settings[$key]) ? $all_settings[$key] : $default;
