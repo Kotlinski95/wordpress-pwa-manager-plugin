@@ -5,10 +5,6 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
-### Fixed
-
-- Plugin Check errors: every include file now exits on direct access, and the service worker script is built from a template file instead of a heredoc.
-
 ## [1.1.0] - 2026-11-27
 
 ### Added
@@ -19,6 +15,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 ### Fixed
 
 - Saving settings through the REST route no longer fatals; it regenerates the manifest and service worker through their functions.
+- Plugin Check errors: every include file now exits on direct access, and the service worker script is built from a template file instead of a heredoc.
 
 ### Changed
 
