@@ -3,7 +3,7 @@
  * Plugin Name: WordPress PWA Manager
  * Plugin URI: https://adriankotlinski.com
  * Description: Complete PWA functionality with admin settings for colors, offline cache, installation prompts, icons, and more.
- * Version: 1.0.1
+ * Version: 1.1.0
  * Requires at least: 6.4
  * Requires PHP: 8.1
  * Author: Adrian Kotlinski
@@ -19,7 +19,7 @@ if (!defined('ABSPATH')) {
 }
 
 // Define plugin constants
-define('WP_PWA_MANAGER_VERSION', '1.0.1');
+define('WP_PWA_MANAGER_VERSION', '1.1.0');
 define('WP_PWA_MANAGER_PLUGIN_URL', plugin_dir_url(__FILE__));
 define('WP_PWA_MANAGER_PLUGIN_PATH', plugin_dir_path(__FILE__));
 define('WP_PWA_MANAGER_PLUGIN_BASENAME', plugin_basename(__FILE__));

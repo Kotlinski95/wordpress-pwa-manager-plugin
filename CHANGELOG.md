@@ -5,6 +5,8 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [1.1.0] - 2026-11-27
+
 ### Added
 
 - The plugin now updates itself from GitHub releases through Plugin Update Checker. Set `WP_PWA_MANAGER_DISABLE_UPDATER` or use the `wp_pwa_manager_enable_updater` filter to turn it off.
