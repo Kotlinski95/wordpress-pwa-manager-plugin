@@ -5,6 +5,8 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [1.2.0] - 2026-11-27
+
 ### Added
 
 - Prompt, button and connection-status styles now use `--wp-pwa-*` custom properties that default to WordPress preset variables, and prompt transitions stop under `prefers-reduced-motion` and `html.ka11y-stop-animations`. The styling API is documented in the README.
