@@ -107,12 +107,10 @@ function wp_pwa_manager_rest_update_settings(WP_REST_Request $request) {
     }
     
     // Regenerate manifest file after settings update
-    $manifest = new WP_PWA_Manager_Manifest();
-    $manifest->generate_manifest_file();
+    wp_pwa_manager_generate_manifest_file();
     
     // Regenerate service worker file after settings update
-    $service_worker = new WP_PWA_Manager_Service_Worker();
-    $service_worker->generate_service_worker_file();
+    wp_pwa_manager_generate_service_worker_file();
     
     return rest_ensure_response(array(
         'success' => true,

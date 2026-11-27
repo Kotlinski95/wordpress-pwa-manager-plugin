@@ -10,6 +10,10 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - The plugin now updates itself from GitHub releases through Plugin Update Checker. Set `WP_PWA_MANAGER_DISABLE_UPDATER` or use the `wp_pwa_manager_enable_updater` filter to turn it off.
 - Standalone repository tooling: Composer, release scripts, PHP and Jest unit tests, and CI, CodeQL and release workflows.
 
+### Fixed
+
+- Saving settings through the REST route no longer fatals; it regenerates the manifest and service worker through their functions.
+
 ### Changed
 
 - The frontend script loads with the `defer` strategy and the frontend stylesheet loads non-blocking with a `noscript` fallback.
