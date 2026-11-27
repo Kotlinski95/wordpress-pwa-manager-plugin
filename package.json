@@ -1,6 +1,6 @@
 {
   "name": "wordpress-pwa-manager",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Complete PWA functionality for WordPress with admin settings",
   "author": "Adrian Kotlinski",
   "license": "GPL-2.0-or-later",

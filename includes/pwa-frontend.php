@@ -71,3 +71,22 @@ function wp_pwa_manager_add_pwa_scripts() {
     // Service worker registration is handled by the compiled frontend.js file
     // which includes additional PWA features like install prompts, update handling, etc.
 }
+
+function wp_pwa_manager_make_stylesheet_non_blocking($html, $handle) {
+    if ('wp-pwa-manager-frontend' !== $handle) {
+        return $html;
+    }
+
+    $non_blocking = str_replace('<link', '<link data-no-defer="1" data-no-optimize="1"', $html);
+    $non_blocking = str_replace(array('media="all"', "media='all'"), array('media="print"', "media='print'"), $non_blocking);
+
+    if (false === strpos($non_blocking, 'onload=')) {
+        $non_blocking = str_replace(
+            array("media='print'", 'media="print"'),
+            array("media='print' onload=\"this.media='all'\"", 'media="print" onload="this.media=\'all\'"'),
+            $non_blocking
+        );
+    }
+
+    return $non_blocking . '<noscript>' . $html . '</noscript>' . "\n";
+}

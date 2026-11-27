@@ -106,24 +106,6 @@ function wp_pwa_manager_enqueue_frontend_assets() {
 }
 add_action('wp_enqueue_scripts', 'wp_pwa_manager_enqueue_frontend_assets');
 
-function wp_pwa_manager_make_stylesheet_non_blocking($html, $handle) {
-    if ('wp-pwa-manager-frontend' !== $handle) {
-        return $html;
-    }
-
-    $non_blocking = str_replace('<link', '<link data-no-defer="1" data-no-optimize="1"', $html);
-    $non_blocking = str_replace(array('media="all"', "media='all'"), array('media="print"', "media='print'"), $non_blocking);
-
-    if (false === strpos($non_blocking, 'onload=')) {
-        $non_blocking = str_replace(
-            array("media='print'", 'media="print"'),
-            array("media='print' onload=\"this.media='all'\"", 'media="print" onload="this.media=\'all\'"'),
-            $non_blocking
-        );
-    }
-
-    return $non_blocking . '<noscript>' . $html . '</noscript>' . "\n";
-}
 add_filter('style_loader_tag', 'wp_pwa_manager_make_stylesheet_non_blocking', 10, 2);
 
 function wp_pwa_manager_enqueue_admin_assets($hook) {
