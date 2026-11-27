@@ -30,11 +30,11 @@
     "ts-jest": "^29.2.0"
   },
   "dependencies": {
-    "@wordpress/api-fetch": "^6.0.0",
-    "@wordpress/components": "^25.0.0",
-    "@wordpress/element": "^5.0.0",
-    "@wordpress/i18n": "^4.0.0",
-    "@wordpress/icons": "^9.0.0",
+    "@wordpress/api-fetch": "^8.2.0",
+    "@wordpress/components": "^45.0.0",
+    "@wordpress/element": "^10.2.0",
+    "@wordpress/i18n": "^7.2.0",
+    "@wordpress/icons": "^21.0.0",
     "classnames": "^2.3.2"
   },
   "private": true,
