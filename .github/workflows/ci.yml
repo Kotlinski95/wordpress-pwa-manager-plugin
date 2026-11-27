@@ -1,0 +1,92 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    types: [opened, synchronize, reopened, labeled, unlabeled]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  php:
+    name: PHP ${{ matrix.php }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        php: ['8.1', '8.5']
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      - uses: shivammathur/setup-php@eb7c497e18156a6bbabfef1d3a82760b9eda3962
+        with:
+          php-version: ${{ matrix.php }}
+          tools: composer:v2
+          coverage: none
+      - id: composer-cache
+        run: echo "dir=$(composer config cache-files-dir)" >> "$GITHUB_OUTPUT"
+      - uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: composer-${{ matrix.php }}-${{ hashFiles('composer.lock') }}
+          restore-keys: composer-${{ matrix.php }}-
+      - run: composer install --no-interaction --prefer-dist
+      - run: composer audit
+      - run: find includes wordpress-pwa-manager.php -name '*.php' -print0 | xargs -0 -n1 php -l > /dev/null
+      - run: composer test:unit
+
+  js:
+    name: Node 22
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm audit --omit=dev --audit-level=high
+      - run: npm run lint
+      - run: npm test
+      - run: npm run build
+      - run: npm run check-version
+
+  plugin-check:
+    name: Plugin Check
+    runs-on: ubuntu-latest
+    env:
+      PLUGIN_SLUG: wordpress-pwa-manager
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1
+        with:
+          node-version: 22
+          cache: npm
+      - uses: shivammathur/setup-php@eb7c497e18156a6bbabfef1d3a82760b9eda3962
+        with:
+          php-version: '8.5'
+          tools: composer:v2
+          coverage: none
+      - run: npm ci
+      - run: npm run build
+      - run: composer install --no-dev -o --prefer-dist --no-interaction
+      - run: |
+          mkdir -p "dist/${PLUGIN_SLUG}"
+          rsync -a --exclude-from=.distignore ./ "dist/${PLUGIN_SLUG}/" --exclude=dist
+      - uses: WordPress/plugin-check-action@10857da14b6c2246d15402b3e69f777edcf8c12e
+        with:
+          build-dir: dist/${{ env.PLUGIN_SLUG }}
+          slug: ${{ env.PLUGIN_SLUG }}
+          exclude-checks: |
+            plugin_updater
+            plugin_readme
+          ignore-codes: |
+            wp_function_not_compatible_with_requires_wp
+            missing_composer_json_file
+            WordPress.DB.SlowDBQuery.slow_db_query_meta_query
+            WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound

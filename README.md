@@ -23,9 +23,43 @@ A comprehensive Progressive Web App (PWA) plugin for WordPress with complete adm
 
 ## Installation
 
-1. Upload the plugin folder to `/wp-content/plugins/`
-2. Activate the plugin through the WordPress admin
-3. Go to Settings > PWA Manager to configure your PWA
+Download `wordpress-pwa-manager.zip` from the latest [GitHub release](https://github.com/Kotlinski95/wordpress-pwa-manager-plugin/releases) and upload it under Plugins > Add New > Upload Plugin. Activate it, then open Settings > PWA Manager.
+
+Requires WordPress 6.4+ and PHP 8.1+.
+
+## Updates
+
+New releases appear as a normal plugin update in the WordPress admin, served from GitHub release assets. To turn the update checks off, for example when the site deploys another way, add this to `wp-config.php`:
+
+```php
+define( 'WP_PWA_MANAGER_DISABLE_UPDATER', true );
+```
+
+The `wp_pwa_manager_enable_updater` filter does the same: return `false` to disable.
+
+## Theme integration
+
+The frontend script (handle `wp-pwa-manager-frontend`, loaded with the `defer` strategy) injects markup a theme can style. The stylesheet of the same handle loads non-blocking, so a theme should not depend on it for first paint.
+
+| Class | Element |
+| --- | --- |
+| `.pwa-install-prompt` | Install prompt wrapper, gets `.show` when visible |
+| `.pwa-update-prompt` | Update prompt wrapper, gets `.show` when visible |
+| `.pwa-prompt-content`, `.pwa-prompt-icon`, `.pwa-prompt-text`, `.pwa-prompt-buttons` | Inner parts of both prompts (`.pwa-prompt-*`) |
+| `.pwa-install-button` | Install action button |
+| `.pwa-connection-status` | Online and offline toast, with `.pwa-status-online` or `.pwa-status-offline` |
+
+A theme can ship its own `offline.html` in its root and pick it under the offline settings. Without that file the plugin falls back to its built-in offline page.
+
+## Development
+
+```bash
+npm ci && composer install
+npm run build
+npm test
+vendor/bin/phpunit
+npm run package
+```
 
 ## Configuration
 

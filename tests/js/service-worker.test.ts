@@ -12,7 +12,9 @@ describe( 'service worker registration', () => {
 		trackListeners();
 		jest.spyOn( console, 'log' ).mockImplementation( () => undefined );
 		jest.spyOn( console, 'warn' ).mockImplementation( () => undefined );
-		errorSpy = jest.spyOn( console, 'error' ).mockImplementation( () => undefined );
+		errorSpy = jest
+			.spyOn( console, 'error' )
+			.mockImplementation( () => undefined );
 		document.body.innerHTML = '';
 	} );
 
