@@ -1,0 +1,29 @@
+{
+  "name": "kotlinskidev/wordpress-pwa-manager",
+  "description": "Complete PWA functionality for WordPress with admin settings.",
+  "type": "wordpress-plugin",
+  "license": "GPL-2.0-or-later",
+  "require": {
+    "php": ">=8.1",
+    "yahnis-elsts/plugin-update-checker": "^5.5"
+  },
+  "require-dev": {
+    "brain/monkey": "^2.6",
+    "phpunit/phpunit": "^10.5"
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Kotlinskidev\\PwaManager\\Tests\\": "tests/php/"
+    }
+  },
+  "config": {
+    "optimize-autoloader": true,
+    "sort-packages": true,
+    "platform": {
+      "php": "8.1.99"
+    }
+  },
+  "scripts": {
+    "test:unit": "phpunit --configuration phpunit.xml.dist"
+  }
+}

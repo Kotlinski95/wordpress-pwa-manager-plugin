@@ -4,9 +4,13 @@
  * Plugin URI: https://adriankotlinski.com
  * Description: Complete PWA functionality with admin settings for colors, offline cache, installation prompts, icons, and more.
  * Version: 1.0.1
+ * Requires at least: 6.4
+ * Requires PHP: 8.1
  * Author: Adrian Kotlinski
  * License: GPL v2 or later
  * Text Domain: wordpress-pwa-manager
+ * Domain Path: /languages
+ * Update URI: https://github.com/Kotlinski95/wordpress-pwa-manager-plugin
  */
 
 // Prevent direct access
@@ -20,7 +24,9 @@ define('WP_PWA_MANAGER_PLUGIN_URL', plugin_dir_url(__FILE__));
 define('WP_PWA_MANAGER_PLUGIN_PATH', plugin_dir_path(__FILE__));
 define('WP_PWA_MANAGER_PLUGIN_BASENAME', plugin_basename(__FILE__));
 
-// --- Functional replacements for main plugin logic ---
+if (file_exists(WP_PWA_MANAGER_PLUGIN_PATH . 'vendor/autoload.php')) {
+    require_once WP_PWA_MANAGER_PLUGIN_PATH . 'vendor/autoload.php';
+}
 
 // Include required files
 require_once WP_PWA_MANAGER_PLUGIN_PATH . 'includes/pwa-admin.php';
@@ -28,6 +34,9 @@ require_once WP_PWA_MANAGER_PLUGIN_PATH . 'includes/pwa-frontend.php';
 require_once WP_PWA_MANAGER_PLUGIN_PATH . 'includes/pwa-manifest.php';
 require_once WP_PWA_MANAGER_PLUGIN_PATH . 'includes/pwa-service-worker.php';
 require_once WP_PWA_MANAGER_PLUGIN_PATH . 'includes/pwa-settings.php';
+require_once WP_PWA_MANAGER_PLUGIN_PATH . 'includes/pwa-updater.php';
+
+wp_pwa_manager_updater_init(__FILE__);
 
 function wp_pwa_manager_init() {
     // Load text domain
@@ -63,7 +72,7 @@ function wp_pwa_manager_enqueue_frontend_assets() {
             WP_PWA_MANAGER_PLUGIN_URL . 'build/frontend.js',
             array(),
             WP_PWA_MANAGER_VERSION,
-            true
+            array('in_footer' => true, 'strategy' => 'defer')
         );
 
         wp_enqueue_style(
@@ -96,6 +105,26 @@ function wp_pwa_manager_enqueue_frontend_assets() {
     }
 }
 add_action('wp_enqueue_scripts', 'wp_pwa_manager_enqueue_frontend_assets');
+
+function wp_pwa_manager_make_stylesheet_non_blocking($html, $handle) {
+    if ('wp-pwa-manager-frontend' !== $handle) {
+        return $html;
+    }
+
+    $non_blocking = str_replace('<link', '<link data-no-defer="1" data-no-optimize="1"', $html);
+    $non_blocking = str_replace(array('media="all"', "media='all'"), array('media="print"', "media='print'"), $non_blocking);
+
+    if (false === strpos($non_blocking, 'onload=')) {
+        $non_blocking = str_replace(
+            array("media='print'", 'media="print"'),
+            array("media='print' onload=\"this.media='all'\"", 'media="print" onload="this.media=\'all\'"'),
+            $non_blocking
+        );
+    }
+
+    return $non_blocking . '<noscript>' . $html . '</noscript>' . "\n";
+}
+add_filter('style_loader_tag', 'wp_pwa_manager_make_stylesheet_non_blocking', 10, 2);
 
 function wp_pwa_manager_enqueue_admin_assets($hook) {
     if ('settings_page_wp-pwa-manager' === $hook) {
