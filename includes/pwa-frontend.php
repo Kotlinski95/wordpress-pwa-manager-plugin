@@ -1,5 +1,9 @@
 <?php
 
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
+
 function wp_pwa_manager_frontend_init() {
     add_action('wp_footer', 'wp_pwa_manager_add_pwa_scripts');
     wp_pwa_manager_handle_offline_page();

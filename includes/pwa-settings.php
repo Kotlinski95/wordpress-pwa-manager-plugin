@@ -1,5 +1,9 @@
 <?php
 
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
+
 define('WP_PWA_MANAGER_OPTION_GROUP', 'wp_pwa_manager_settings');
 
 function wp_pwa_manager_get_all_settings() {

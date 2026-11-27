@@ -1,5 +1,9 @@
 <?php
 
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
+
 // Functional replacements for WP_PWA_Manager_Manifest
 
 function wp_pwa_manager_manifest_init() {

@@ -45,4 +45,18 @@ final class MainFileTest extends TestCase
         $this->assertStringContainsString("add_filter('style_loader_tag', 'wp_pwa_manager_make_stylesheet_non_blocking'", $this->source);
         $this->assertStringContainsString("require_once WP_PWA_MANAGER_PLUGIN_PATH . 'vendor/autoload.php'", $this->source);
     }
+
+    public function test_every_include_has_direct_access_guard(): void
+    {
+        $files = glob(dirname(__DIR__, 2) . '/includes/*.php');
+
+        $this->assertNotEmpty($files);
+        foreach ($files as $file) {
+            $this->assertMatchesRegularExpression(
+                "/if\\s*\\(\\s*!\\s*defined\\(\\s*'ABSPATH'\\s*\\)\\s*\\)\\s*\\{\\s*exit;/",
+                (string) file_get_contents($file),
+                basename($file)
+            );
+        }
+    }
 }
