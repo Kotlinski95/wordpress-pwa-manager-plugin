@@ -4,22 +4,30 @@
   "description": "Complete PWA functionality for WordPress with admin settings",
   "author": "Adrian Kotlinski",
   "license": "GPL-2.0-or-later",
-  "main": "build/index.js",
   "scripts": {
     "build": "wp-scripts build",
     "start": "wp-scripts start",
-    "dev": "wp-scripts start",
+    "lint": "wp-scripts lint-js tests/js",
     "lint:css": "wp-scripts lint-style",
-    "lint:js": "wp-scripts lint-js",
     "format": "wp-scripts format",
-    "type-check": "tsc --noEmit"
+    "type-check": "tsc --noEmit",
+    "test": "jest --passWithNoTests",
+    "i18n:pot": "wp i18n make-pot . languages/wordpress-pwa-manager.pot --include=includes,build,wordpress-pwa-manager.php",
+    "i18n:json": "wp i18n make-json languages --no-purge && node bin/fix-i18n-json.mjs",
+    "check-version": "node bin/check-version.mjs",
+    "release": "node bin/release.mjs",
+    "package": "node bin/package-zip.mjs"
   },
   "devDependencies": {
     "@types/react": "^18.0.0",
     "@types/react-dom": "^18.0.0",
     "@wordpress/scripts": "^26.0.0",
     "ts-loader": "^9.5.4",
-    "typescript": "^5.0.0"
+    "typescript": "^5.0.0",
+    "@types/jest": "^29.5.0",
+    "jest": "^29.7.0",
+    "jest-environment-jsdom": "^29.7.0",
+    "ts-jest": "^29.2.0"
   },
   "dependencies": {
     "@wordpress/api-fetch": "^6.0.0",
@@ -28,5 +36,9 @@
     "@wordpress/i18n": "^4.0.0",
     "@wordpress/icons": "^9.0.0",
     "classnames": "^2.3.2"
+  },
+  "private": true,
+  "engines": {
+    "node": ">=20"
   }
 }
