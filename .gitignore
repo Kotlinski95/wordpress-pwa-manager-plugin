@@ -1,0 +1,7 @@
+build
+node_modules
+vendor
+dist
+.DS_Store
+._*
+.phpunit.result.cache
